@@ -1,0 +1,43 @@
+/* Make Directory branch                        */
+/*                                              */
+/* Example:                                     */
+/*     D:\test is empty                         */
+/* result=MkDirBranch('D:\test\data\test\1')    */
+/* (result = 0 if Okay)                         */
+/*     D:\test\data\test\1 maked if all ok      */
+
+MkDirBranch:
+
+Parse arg path
+RxMS = RxMStemInit()
+Interpret RxMS
+
+/* Remove tailed directory separator if present */
+
+If Right(path, RxM.DirSep, 1) Then
+   Path = Strip(path, 'T', RxM.DirSep)
+
+/* If FULL path or from root drive path is      */
+/* not specified,  use current directory as     */
+/* root for make branch                         */
+
+chroot = Directory()
+Path.Drive = FileSpec('Drive', path)
+Path.Path = FileSpec('Path', path)
+If Path.Drive = '' Then
+   If Left(Path.Path, 1) = RxM.DirSep Then
+      Path.Drive = FileSpec('Drive', chroot)
+   Else
+        Path.Drive = chroot
+
+/* Make Branch                                  */
+
+path = Path.Drive||Path.Path
+curDir = ''
+Do While path \= ''
+   Parse Value path with curSubDir RxM.DirSep path
+   curDir = curDir||curSubDir
+   Call SysMkDir(curDir)
+   curDir = curDir||RxM.DirSep
+End
+Return Result

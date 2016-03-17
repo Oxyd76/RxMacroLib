@@ -1,0 +1,6 @@
+/* Wrapper for SysDropFuncs               */
+/* This wrapper SysDropFuncs turn to OFF. */
+
+SysDropFuncs: procedure
+RxFuncQuery('SysLoadFuncs')
+return result

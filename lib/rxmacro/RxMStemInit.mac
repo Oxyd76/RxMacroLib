@@ -1,0 +1,17 @@
+/* System stemmed vars for many scripts and macros */
+/* Vars is stored in RxM. stem (RexxxMacro Stem)   */
+
+RxMStemInit:
+Ret = "RxM.RxMVer   = '0.0.1';"||,
+      "RxM.DirSep   = '\';"||,
+      "RxM.UxDirSep = '/';"||,
+      "RxM.Space    = ' ';"||,
+      "RxM.None     = '';"||,
+      "RxM.CRLF     = '0D0A'x;"||,
+      "RxM.CR       = '0D'x;"||,
+      "RxM.LF       = '0A'x;"||,
+      "RxM.Bell     = '07'x;"||,
+      "RxM.SemCol   = '3B'x"
+return Ret
+
+

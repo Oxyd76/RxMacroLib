@@ -1,0 +1,109 @@
+/* Simply config files parser.                             */
+/*                                                         */
+/* example.cfg:                                            */
+/* ; Example config 4 RxMLib                               */
+/* Param1='one'                                            */
+/* Param2 = 2  ; Num parameter                             */
+/* CfgRules='3'                                            */
+/*                                                         */
+/* Use ; for remarks in config files.                      */
+/*                                                         */
+/* Usage:                                                  */
+/*      st='Stem'                                          */
+/*      Result=RxMReadCfg(config_file , st, 'RAW')         */
+/*      or Result=RxMReadCfg(config_file , st, 'ARAW')     */
+/*      If Result \= 'ERROR' Then                          */
+/*         Interpret Result                                */
+/*      Else                                               */
+/*         Say 'Config reading Error!'                     */
+/*                                                         */
+/* If 'raw' then config lines saved to stem                */
+/* as is, without comments.                                */
+/*                                                         */
+/* (Stem.0=3 (Lines count)                                 */
+/*  Stem.1="Param1='one'"                                  */
+/*  Stem.2="Param2 = 2"                                    */
+/*  Stem.3="CfgRules='3'"                                  */
+/*                                                         */
+/* If 'araw' (All RAW) then config lines saved to          */
+/* stem as is, with comments.                              */
+/*                                                         */
+/* If config file does not open, then Result='ERROR'       */
+/* else Result contains stem 4 interpret                   */
+/* If third parameter = '' then parameters                 */
+/* saved to named stem                                     */
+/* (Stem.0=3                                               */
+/*  Stem.Param1='one'                                      */
+/*  Stem.Param2=2                                          */
+/*  Stem.CfgRules='3')                                     */
+
+RxMReadCfg:
+Parse arg Config , StemName, Type
+
+RxMS = RxMStemInit()
+Interpret RxMS
+
+Ret = RxM.None
+rc = Stream(Config, 'c', 'open read')
+If rc \= 'READY:' Then
+   Do
+      Ret = 'ERROR'
+      Call Stop
+   End
+
+/* Main Loop */
+
+Call Value StemName".0", 0
+Count = 0
+
+/* Raw read */
+Type = Translate(Type)
+If Type = 'RAW' | Type = 'ARAW' Then Do
+   Do While Lines(Config) > 0
+      Count = Count + 1
+      CurLine = Linein(Config)
+      If Type = 'RAW' Then Do
+         CurLine = StripComment(CurLine)
+         If CurLine = RxM.None Then
+            Count = Count - 1
+         Else
+              Ret = Ret||StemName||'.'||Count||' = "'CurLine||'"'||RxM.SemCol
+      End
+      Else
+           Ret = Ret||StemName||'.'||Count||' = "'CurLine||'"'||RxM.SemCol
+   End
+End
+
+/* Named Read */
+Else Do
+     Do While Lines(Config) > 0
+        Count = Count + 1
+        CurLine = Linein(Config)
+        CurLine = StripComment(CurLine)
+        If CurLine = RxM.None Then Count = Count - 1
+        Else Do
+             p=Pos('=', CurLine)
+             If p = 0 Then Count = Count -1
+             Else Do
+                  ParamName = Strip(Substr(CurLine, 1, p-1))
+                  ParamValue = Strip(Substr(CurLine, P+1))
+                  Ret = Ret||StemName||'.'||ParamName||' = '||ParamValue||RxM.SemCol
+             End
+        End
+     End
+End
+Ret = StemName||'.0 = '||Count||RxM.SemCol||Ret
+Ret = Substr(Ret,1,Length(Ret)-1)
+rc = Stream(Config, 'c', 'close')
+Call Stop
+
+Stop:
+Return Ret
+
+/* strip comments */
+
+StripComment:
+Parse arg line
+p = POS(RxM.SemCol, line)
+IF p > 0 Then line = Strip(Delstr(line, p))
+Return line

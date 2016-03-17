@@ -1,0 +1,13 @@
+/* Load some external functions (rexxutil 4 example) if avaiable. */
+/* Usage: result = RxFuncAdd('DllName', 'LoadFunction')           */
+/* Result codes:                                                  */
+/*               0 - Functions loaded                             */
+/*           other - Load functions failed                        */
+
+RxFuncAdd: procedure
+Parse arg Function , dll , FunctionName
+if RxFuncQuery(FunctionName) then
+      call RxFuncAdd Function, dll , FunctionName
+Else
+     result = 0
+return result
