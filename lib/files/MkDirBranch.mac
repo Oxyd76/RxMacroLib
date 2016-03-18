@@ -7,37 +7,40 @@
 /*     D:\test\data\test\1 maked if all ok      */
 
 MkDirBranch:
-
 Parse arg path
-RxMS = RxMStemInit()
-Interpret RxMS
 
-/* Remove tailed directory separator if present */
+RxM = RxMStemInit()
+Interpret RxM
 
-If Right(path, RxM.DirSep, 1) Then
-   Path = Strip(path, 'T', RxM.DirSep)
+chroot = Directory()
+/* Add tailed directory separator if not set    */
+
+If Right(path, 1) \= RxM.DirSep Then
+   Path = Path||RxM.DirSep
 
 /* If FULL path or from root drive path is      */
 /* not specified,  use current directory as     */
 /* root for make branch                         */
 
-chroot = Directory()
+
 Path.Drive = FileSpec('Drive', path)
-Path.Path = FileSpec('Path', path)
 If Path.Drive = '' Then
-   If Left(Path.Path, 1) = RxM.DirSep Then
+   If Left(Path, 1) = RxM.DirSep Then
       Path.Drive = FileSpec('Drive', chroot)
    Else
         Path.Drive = chroot
+Path.Path = FileSpec('Path', path)
+path = Path.Drive||Path.Path
 
 /* Make Branch                                  */
 
-path = Path.Drive||Path.Path
-curDir = ''
+CurDir = ''
 Do While path \= ''
-   Parse Value path with curSubDir RxM.DirSep path
-   curDir = curDir||curSubDir
-   Call SysMkDir(curDir)
+   Parse Value path with CurSubDir '\' path
+   CurDir = CurDir||CurSubDir
+   Call SysFileTree curDir, 'IsExistDir', 'DO', '*****', '*****'
+   If IsExistDir.0 = 0 Then
+      Call SysMkDir CurDir
    curDir = curDir||RxM.DirSep
 End
 Return Result
