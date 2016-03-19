@@ -7,15 +7,15 @@
 /*     D:\test\data\test\1 maked if all ok      */
 
 MkDirBranch:
-Parse arg path
+Parse arg Path
 
 RxM = RxMStemInit()
 Interpret RxM
 
-chroot = Directory()
+Chroot = Directory()
 /* Add tailed directory separator if not set    */
 
-If Right(path, 1) \= RxM.DirSep Then
+If Right(Path, 1) \= RxM.DirSep Then
    Path = Path||RxM.DirSep
 
 /* If FULL path or from root drive path is      */
@@ -23,24 +23,24 @@ If Right(path, 1) \= RxM.DirSep Then
 /* root for make branch                         */
 
 
-Path.Drive = FileSpec('Drive', path)
+Path.Drive = FileSpec('Drive', Path)
 If Path.Drive = '' Then
    If Left(Path, 1) = RxM.DirSep Then
-      Path.Drive = FileSpec('Drive', chroot)
+      Path.Drive = FileSpec('Drive', Chroot)
    Else
-        Path.Drive = chroot
-Path.Path = FileSpec('Path', path)
-path = Path.Drive||Path.Path
+        Path.Drive = Chroot
+Path.Path = FileSpec('Path', Path)
+Path = Path.Drive||Path.Path
 
 /* Make Branch                                  */
 
 CurDir = ''
-Do While path \= ''
-   Parse Value path with CurSubDir '\' path
+Do While Path \= ''
+   Parse Value Path with CurSubDir Value(RxM.DirSep) Path
    CurDir = CurDir||CurSubDir
    Call SysFileTree curDir, 'IsExistDir', 'DO', '*****', '*****'
    If IsExistDir.0 = 0 Then
       Call SysMkDir CurDir
-   curDir = curDir||RxM.DirSep
+   CurDir = CurDir||RxM.DirSep
 End
 Return Result
