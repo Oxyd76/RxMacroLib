@@ -28,7 +28,7 @@ If Path.Drive = '' Then
    If Left(Path, 1) = RxM.DirSep Then
       Path.Drive = FileSpec('Drive', Chroot)
    Else
-        Path.Drive = Chroot
+        Path.Drive = Chroot||RxM.DirSep
 Path.Path = FileSpec('Path', Path)
 Path = Path.Drive||Path.Path
 
@@ -38,7 +38,7 @@ CurDir = ''
 Do While Path \= ''
    Parse Value Path with CurSubDir Value(RxM.DirSep) Path
    CurDir = CurDir||CurSubDir
-   Call SysFileTree curDir, 'IsExistDir', 'DO', '*****', '*****'
+   Call SysFileTree CurDir, 'IsExistDir', 'DO', '*****', '*****'
    If IsExistDir.0 = 0 Then
       Call SysMkDir CurDir
    CurDir = CurDir||RxM.DirSep

@@ -1,0 +1,63 @@
+/* Remove directory tree                        */
+/*                                              */
+/* Example:                                     */
+/*     D:\test\data\test\1                      */
+/* data\test\1 to remove                        */
+/* result=RmDirTree('D:\test\data\')            */
+/* (result = 0 if Okay)                         */
+/*     D:\test\data\test\1 is removed if ok     */
+
+RmDirTree:
+Parse arg Path
+
+RxM = RxMStemInit()
+Interpret RxM
+
+Chroot = Directory()
+/* Add tailed directory separator if not set    */
+
+If Right(Path, 1) \= RxM.DirSep Then
+   Path = Path||RxM.DirSep
+
+/* If FULL path or from root drive path is      */
+/* not specified,  use current directory as     */
+/* root for make branch                         */
+
+
+Path.Drive = FileSpec('Drive', Path)
+If Path.Drive = '' Then
+   If Left(Path, 1) = RxM.DirSep Then
+      Path.Drive = FileSpec('Drive', Chroot)
+   Else
+        Path.Drive = Chroot
+Path.Path = FileSpec('Path', Path)
+Path = Path.Drive||Path.Path
+
+/*                                              */
+/* Remove directory Tree                        */
+/*                                              */
+
+/* Check directory presence                     */
+
+Call SysFileTree Path, 'DirList', 'DOS', '*****', '*****'
+If DirList.0 = 0 Then Do
+    Result = 3
+    Return Result
+End
+
+/* Delete all files in subtree if present       */
+
+Call SysFileTree Path, 'FileList', 'FOS', '*****', '*****'
+If FileList.0 \= 0 Then
+    Do Count = 1 To FileList.0
+        Call SysFileDelete FileList.Count
+    End
+Drop FileList.
+
+/* Delete empty directories                     */
+
+Do Count = DirList.0 To 1
+    Call SysRmDir FileList.Count
+End
+
+Return Result
