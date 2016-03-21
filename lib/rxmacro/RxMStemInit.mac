@@ -5,6 +5,7 @@ RxMStemInit:
 Ret = "RxM.RxMVer   = '0.0.1';"||,
       "RxM.DirSep   = '\';"||,
       "RxM.UxDirSep = '/';"||,
+      "RxM.AllFiles = '*.*';"||,
       "RxM.Space    = ' ';"||,
       "RxM.None     = '';"||,
       "RxM.CRLF     = '0D0A'x;"||,
@@ -12,6 +13,6 @@ Ret = "RxM.RxMVer   = '0.0.1';"||,
       "RxM.LF       = '0A'x;"||,
       "RxM.Bell     = '07'x;"||,
       "RxM.SemCol   = '3B'x"
-return Ret
+Return Ret
 
 

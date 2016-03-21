@@ -9,6 +9,7 @@
 
 RmDirTree:
 Parse arg Path
+DefPath = Path
 
 RxM = RxMStemInit()
 Interpret RxM
@@ -52,12 +53,13 @@ If FileList.0 \= 0 Then
     Do Count = 1 To FileList.0
         Call SysFileDelete FileList.Count
     End
-Drop FileList.
 
 /* Delete empty directories                     */
 
-Do Count = DirList.0 To 1
-    Call SysRmDir FileList.Count
+Do Count = 1 To DirList.0
+    Idx = DirList.0 + 1 - Count
+    Call SysRmDir DirList.Idx
 End
+Call SysRmDir DefPath
 
 Return Result

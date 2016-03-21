@@ -3,10 +3,7 @@
 /*                                              */
 /* Init RxMStemInit                             */
 /*                                              */
-If SysQueryRexxMacro(RxMStemInit) Then
-   Call SysDropRexxMacro RxMStemInit
-Call SysAddRexxMacro RxMStemInit, '..\lib\rxmacro\RxMStemInit.mac'
-Say Left('SysAddRexxMacro RxMStemInit status:', 40, '.')||result
+
 RxM = RxMStemInit()
 Interpret RxM
 
@@ -104,10 +101,6 @@ Say RxM.CrLf
 /*                                              */
 /* Exiting from test                            */
 /*                                              */
-
-call SysDropRexxMacro 'RxMStemInit'
-say Left('SysDropRexxMacro RxMStemInit status:', 40, '.')||Result
-Say RxM.CrLf
 
 Say Center('Exiting from RxMReadCfg test', 40, '_')
 Exit 0
