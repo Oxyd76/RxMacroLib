@@ -2,7 +2,12 @@
 /* Vars is stored in RxM. stem (RexxxMacro Stem)   */
 
 RxMStemInit:
+Parse Source OS
 Ret = "RxM.RxMVer   = '0.0.1';"||,
+      "Parse Source RxM.OS . .;"||,
+      "Parse Source . . RxM.ExecName;"||,
+      "Parse Source . RxM.ExecType .;"||,
+      "RxM.RootPath = FileSpec('Drive', RxM.ExecName)||FileSpec('Path', RxM.ExecName);"||,
       "RxM.DirSep   = '\';"||,
       "RxM.UxDirSep = '/';"||,
       "RxM.AllFiles = '*.*';"||,

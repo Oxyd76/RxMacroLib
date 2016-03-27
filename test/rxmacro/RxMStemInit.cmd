@@ -12,6 +12,10 @@ If RxM.RxMVer = 'RXM.RXMVER' Then
 Say Center('Print RxM stem values', 40, '_')
 Say
 Say Left('RxM.RxMVer   = ', 40, '.')||RxM.RxMVer
+Say Left('RxM.OS       = ', 40, '.')||RxM.OS
+Say Left('RxM.ExecType = ', 40, '.')||RxM.ExecType
+Say Left('RxM.ExecName = ', 40, '.')||RxM.ExecName
+Say Left('RxM.RootPath = ', 40, '.')||RxM.RootPath
 Say Left('RxM.DirSep   = ', 40, '.')||RxM.DirSep
 Say Left('RxM.UxDirSep = ', 40, '.')||RxM.UxDirSep
 Say Left('RxM.Space    = ', 40, '.')||RxM.Space
