@@ -1,0 +1,3 @@
+# Reclassify *.cmd and other REXX files to correct type.
+*.cmd linguist-language=REXX
+*.mac linguist-language=REXX
